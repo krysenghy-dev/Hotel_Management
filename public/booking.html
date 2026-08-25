@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>New Booking — HotelDesk</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.8"><path d="M3 18v-8a2 2 0 0 1 2-2h5v6"/><path d="M3 12h18v6"/><path d="M10 8h6a2 2 0 0 1 2 2v2"/><path d="M3 20h18"/></svg>
+      HotelDesk
+    </div>
+
+    <button class="nav-item" data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" data-page="rooms">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-8a2 2 0 0 1 2-2h5v6"/><path d="M3 12h18v6"/><path d="M10 8h6a2 2 0 0 1 2 2v2"/></svg>
+      Rooms
+    </button>
+    <button class="nav-item" data-page="booking">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+      New Booking
+    </button>
+    <button class="nav-item" data-page="guests">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M15.5 14.2c2.6.5 4.5 2.6 4.5 5.8"/></svg>
+      Guests
+    </button>
+
+    <div class="sidebar-spacer"></div>
+    <button class="logout-btn" id="logout-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      Log Out
+    </button>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Quick search…" />
+      </div>
+      <div class="topbar-right">
+        <div class="bell" id="notif-bell">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b6270" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="dot" id="notif-dot" style="display:none;"></span>
+          <div class="dropdown-panel" id="notif-panel">
+            <div class="dropdown-header">
+              <h4>Notifications</h4>
+              <button type="button" id="notif-mark-all">Mark all read</button>
+            </div>
+            <div class="notif-list" id="notif-list"></div>
+          </div>
+        </div>
+        <div class="avatar" id="user-avatar">AD
+          <div class="dropdown-panel account-menu" id="account-menu">
+            <div class="am-header">
+              <div class="am-name" id="am-name">Hotel Administrator</div>
+              <div class="am-role" id="am-role">admin</div>
+            </div>
+            <button type="button" class="am-item" id="am-manage-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+              Manage Account
+            </button>
+            <button type="button" class="am-item" id="am-logout-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+              Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>New Booking</h1>
+          <p>Create a new reservation for a guest.</p>
+        </div>
+      </div>
+
+      <form id="booking-form">
+      <div class="booking-layout">
+        <div>
+          <div class="form-card">
+            <h3>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M15.5 14.2c2.6.5 4.5 2.6 4.5 5.8"/></svg>
+              Guest Information
+            </h3>
+            <div class="form-grid">
+              <div class="field"><label>First Name <small class="req">*</small></label><input required id="g-first" placeholder="John"></div>
+              <div class="field"><label>Last Name <small class="req">*</small></label><input required id="g-last" placeholder="Doe"></div>
+              <div class="field"><label>Email Address</label><input type="email" id="g-email" placeholder="john@example.com"></div>
+              <div class="field"><label>Phone Number</label><input id="g-phone" placeholder="+1 (555) 000-0000"></div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h3>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+              Stay Details
+            </h3>
+            <div class="form-grid">
+              <div class="field"><label>Check-in Date <small class="req">*</small></label><input required type="date" id="s-checkin"></div>
+              <div class="field"><label>Check-out Date <small class="req">*</small></label><input required type="date" id="s-checkout"></div>
+              <div class="field">
+                <label>Room Type <small class="req">*</small></label>
+                <select id="s-roomtype" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:#f7f7f9;font-size:14px;">
+                  <option value="">Select Room Type</option>
+                  <option value="150">Single — $150/night</option>
+                  <option value="200">Double — $200/night</option>
+                  <option value="300">Deluxe — $300/night</option>
+                  <option value="450">Suite — $450/night</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Number of Guests</label>
+                <div class="qty-row">
+                  <button type="button" class="qty-btn" id="qty-minus">−</button>
+                  <span class="qty-val" id="qty-val">1</span>
+                  <button type="button" class="qty-btn" id="qty-plus">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-top:16px;">
+              <label>Special Requests</label>
+              <textarea id="s-notes" placeholder="Any special requests, dietary requirements, or arrival time notes…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Booking Summary
+          </h3>
+          <div class="summary-box" id="summary-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ac" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+            Select dates and room type to see estimated total.
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Confirm Booking</button>
+          <button type="button" class="save-draft" id="save-draft-btn">Save as Draft</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toast-msg">Done</span>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/booking.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HotelDesk — Sign In</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="login-screen">
+  <div class="login-logo">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.8"><path d="M3 18v-8a2 2 0 0 1 2-2h5v6"/><path d="M3 12h18v6"/><path d="M10 8h6a2 2 0 0 1 2 2v2"/><path d="M3 20h18"/></svg>
+  </div>
+  <h1 class="login-title">HotelDesk</h1>
+  <p class="login-sub">Premium Property Management</p>
+
+  <form class="login-card" id="login-form">
+    <div class="login-error" id="login-error">Please enter both a username and password.</div>
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="admin@hotel.com" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        <button type="button" class="eye-btn" id="toggle-pw" aria-label="Show password">👁</button>
+      </div>
+    </div>
+    <div class="forgot-row"><a href="#">forgot password?</a></div>
+    <button type="submit" class="btn-gold">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      Sign In
+    </button>
+  </form>
+
+  <form class="login-card" id="setup-form" style="display:none;">
+    <p class="setup-intro">Welcome! Create the admin account you'll use to sign in.</p>
+    <div class="login-error" id="setup-error">Please fill in every field.</div>
+    <div class="field">
+      <label for="setup-fullname">Full Name</label>
+      <input type="text" id="setup-fullname" placeholder="e.g. Hotel Administrator" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="setup-username">Username</label>
+      <input type="text" id="setup-username" placeholder="Choose a username" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="setup-password">Password</label>
+      <div class="input-wrap">
+        <input type="password" id="setup-password" placeholder="At least 6 characters" autocomplete="new-password" />
+        <button type="button" class="eye-btn" id="setup-toggle-pw" aria-label="Show password">👁</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="setup-confirm">Confirm Password</label>
+      <input type="password" id="setup-confirm" placeholder="Re-enter password" autocomplete="new-password" />
+    </div>
+    <button type="submit" class="btn-gold">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      Create Account &amp; Sign In
+    </button>
+  </form>
+
+  <p class="login-foot">© 2026 &nbsp; HotelDesk Systems. All rights reserved.</p>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
