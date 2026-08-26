@@ -39,7 +39,7 @@ router.post('/setup', (req, res) => {
   const token = jwt.sign(
     { sub: user.id, username: user.username, role: user.role },
     JWT_SECRET,
-    { expiresIn: '12h' }
+    { expiresIn: '30d' }
   );
 
   res.status(201).json({
@@ -63,7 +63,7 @@ router.post('/login', (req, res) => {
   const token = jwt.sign(
     { sub: user.id, username: user.username, role: user.role },
     JWT_SECRET,
-    { expiresIn: '12h' }
+    { expiresIn: '30d' }
   );
 
   res.json({
@@ -98,7 +98,7 @@ router.put('/me', requireAuth, (req, res) => {
   const token = jwt.sign(
     { sub: user.id, username: user.username, role: user.role },
     JWT_SECRET,
-    { expiresIn: '12h' }
+    { expiresIn: '30d' }
   );
   res.json({ token, user: { id: user.id, username: user.username, fullName: user.full_name, role: user.role } });
 });

@@ -2,24 +2,27 @@
    Talks to the Express + SQL backend (see /server). Replaces the old
    localStorage-only Store with real fetch() calls, while keeping a
    similar-shaped API so the page scripts stay easy to read. Auth
-   token lives in sessionStorage (cleared on logout / tab close). */
+   token lives in localStorage — it survives closing the tab/browser,
+   so staff aren't asked to sign in again just because they stepped
+   away for a while; it's only cleared on explicit logout or once the
+   token itself expires. */
 
 const API_BASE = '/api';
 
 const Store = {
   // ---- auth ----
-  isLoggedIn(){ return !!sessionStorage.getItem('hd_token'); },
-  getToken(){ return sessionStorage.getItem('hd_token'); },
+  isLoggedIn(){ return !!localStorage.getItem('hd_token'); },
+  getToken(){ return localStorage.getItem('hd_token'); },
   setSession(token, user){
-    sessionStorage.setItem('hd_token', token);
-    sessionStorage.setItem('hd_user', JSON.stringify(user || {}));
+    localStorage.setItem('hd_token', token);
+    localStorage.setItem('hd_user', JSON.stringify(user || {}));
   },
   getUser(){
-    try{ return JSON.parse(sessionStorage.getItem('hd_user') || '{}'); }catch(e){ return {}; }
+    try{ return JSON.parse(localStorage.getItem('hd_user') || '{}'); }catch(e){ return {}; }
   },
   clearSession(){
-    sessionStorage.removeItem('hd_token');
-    sessionStorage.removeItem('hd_user');
+    localStorage.removeItem('hd_token');
+    localStorage.removeItem('hd_user');
   },
 
   async login(username, password){

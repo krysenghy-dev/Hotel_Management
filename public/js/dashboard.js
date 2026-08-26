@@ -5,6 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
   loadStats();
   renderRecentBookings();
   document.getElementById('export-bookings-btn').addEventListener('click', exportBookings);
+
+  // Re-pull the latest numbers whenever the person comes back to this
+  // tab (e.g. after adding a room/booking/guest on another page, or
+  // switching back from another app) so the dashboard never sits on
+  // stale data without needing a manual page reload.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible'){
+      loadStats();
+      renderRecentBookings();
+    }
+  });
+  window.addEventListener('focus', () => {
+    loadStats();
+    renderRecentBookings();
+  });
 });
 
 function exportBookings(){

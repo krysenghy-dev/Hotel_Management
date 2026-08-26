@@ -12,7 +12,13 @@
 const path = require('path');
 const { DatabaseSync } = require('node:sqlite');
 
-const DB_PATH = path.join(__dirname, 'hoteldesk.db');
+/* On Render (and similar PaaS), the app's filesystem is EPHEMERAL by
+   default — every redeploy or restart wipes local files, including
+   this SQLite file, unless it lives on an attached Persistent Disk.
+   Set DB_PATH to the disk's mount path (e.g. /var/data/hoteldesk.db)
+   in the service's environment variables once a disk is attached;
+   it falls back to the file next to this script for local dev. */
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'hoteldesk.db');
 const raw = new DatabaseSync(DB_PATH);
 raw.exec('PRAGMA journal_mode = WAL');
 raw.exec('PRAGMA foreign_keys = ON');
@@ -116,4 +122,15 @@ function transaction(fn) {
   };
 }
 
-module.exports = { prepare, exec, transaction };
+/* WAL mode keeps recent writes in hoteldesk.db-wal until SQLite decides
+   to fold them back into hoteldesk.db. If the process is killed (host
+   restart, redeploy, crash) instead of shut down cleanly, the -wal file
+   is still read back on next start so committed data is NOT lost — but
+   forcing a checkpoint + clean close on shutdown makes that guarantee
+   solid rather than relying on WAL replay every time. */
+function close() {
+  try { raw.exec('PRAGMA wal_checkpoint(TRUNCATE)'); } catch (err) { /* ignore */ }
+  try { raw.close(); } catch (err) { /* ignore */ }
+}
+
+module.exports = { prepare, exec, transaction, close };
