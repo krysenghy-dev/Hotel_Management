@@ -88,6 +88,17 @@ router.put('/:code', (req, res) => {
      WHERE code = ?`
   ).run(name ?? null, email ?? null, phone ?? null, roomId, status ?? null, req.params.code);
 
+  // Keep the room list honest with whatever change was just made here:
+  // checking a guest in occupies their room; checking them out (or
+  // unassigning the room) frees it back up, instead of leaving the
+  // room stuck "Occupied" with nobody actually in it.
+  if (status === 'Checked In' && roomId) {
+    db.prepare(`UPDATE rooms SET status = 'Occupied', updated_at = datetime('now') WHERE id = ?`).run(roomId);
+  }
+  if (existing.room_id && (status === 'Checked Out' || roomId !== existing.room_id)) {
+    db.prepare(`UPDATE rooms SET status = 'Available', updated_at = datetime('now') WHERE id = ? AND status = 'Occupied'`).run(existing.room_id);
+  }
+
   const row = db.prepare(BASE_SELECT + ' WHERE g.code = ?').get(req.params.code);
   res.json(serializeGuest(row));
 });

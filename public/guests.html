@@ -104,6 +104,47 @@
   <span id="toast-msg">Done</span>
 </div>
 
+<div class="modal-overlay" id="view-guest-modal">
+  <div class="modal">
+    <h3>Guest Details</h3>
+    <div class="form-grid" style="margin-bottom:4px;grid-template-columns:1fr 1fr;">
+      <div class="field"><label>Name</label><div id="vg-name" style="padding:10px 0;font-weight:600;"></div></div>
+      <div class="field"><label>Guest Code</label><div id="vg-code" style="padding:10px 0;"></div></div>
+      <div class="field"><label>Email</label><div id="vg-email" style="padding:10px 0;"></div></div>
+      <div class="field"><label>Phone</label><div id="vg-phone" style="padding:10px 0;"></div></div>
+      <div class="field"><label>Room</label><div id="vg-room" style="padding:10px 0;"></div></div>
+      <div class="field"><label>Status</label><div id="vg-status" style="padding:10px 0;"></div></div>
+      <div class="field"><label>Last Visit</label><div id="vg-visit" style="padding:10px 0;"></div></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="close-view-guest-btn">Close</button>
+      <button type="button" class="btn btn-primary" id="view-to-edit-btn">Edit</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-guest-modal">
+  <div class="modal">
+    <h3>Edit Guest</h3>
+    <form id="edit-guest-form">
+      <input type="hidden" id="eg-code">
+      <div class="form-grid" style="margin-bottom:4px;">
+        <div class="field"><label>Name</label><input required id="eg-name"></div>
+        <div class="field"><label>Email</label><input required type="email" id="eg-email"></div>
+        <div class="field"><label>Phone</label><input id="eg-phone"></div>
+        <div class="field"><label>Room Number</label><input id="eg-room" placeholder="Leave blank for none"></div>
+        <div class="field"><label>Status</label>
+          <select id="eg-status"><option>Reserved</option><option>Checked In</option><option>Checked Out</option></select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-edit-guest-btn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="js/data.js"></script>
 <script src="js/common.js"></script>
 <script src="js/guests.js"></script>

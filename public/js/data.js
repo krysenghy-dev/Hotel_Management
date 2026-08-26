@@ -65,6 +65,9 @@ const Store = {
     const qs = q ? `?q=${encodeURIComponent(q)}` : '';
     return api('/guests' + qs);
   },
+  async updateGuest(code, changes){
+    return api(`/guests/${code}`, { method: 'PUT', body: changes });
+  },
 
   // ---- dashboard ----
   async getStats(){
