@@ -55,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const first = document.getElementById('g-first').value.trim();
     const last = document.getElementById('g-last').value.trim();
-    if (!first || !last || !checkinInput.value || !checkoutInput.value || !roomTypeSelect.value || !roomSelect.value){
+    const email = document.getElementById('g-email').value.trim();
+    const phone = document.getElementById('g-phone').value.trim();
+    if (!first || !last || !email || !checkinInput.value || !checkoutInput.value || !roomTypeSelect.value || !roomSelect.value){
       showToast('Please fill in all required fields, including a specific room');
       return;
     }
@@ -69,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
       await Store.createBooking({
         firstName: first,
         lastName: last,
+        email: email,
+        phone: phone,
         roomTypeLabel: typeLabel,
         ratePerNight: rate,
         checkIn: checkinInput.value,

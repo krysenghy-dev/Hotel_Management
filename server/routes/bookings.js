@@ -45,9 +45,9 @@ router.get('/', (req, res) => {
 
 // POST /api/bookings — create a booking (server computes nights/amount)
 router.post('/', (req, res) => {
-  const { firstName, lastName, roomTypeLabel, ratePerNight, checkIn, checkOut, guestsCount, roomNumber } = req.body || {};
+  const { firstName, lastName, email, phone, roomTypeLabel, ratePerNight, checkIn, checkOut, guestsCount, roomNumber } = req.body || {};
 
-  if (!firstName || !lastName || !checkIn || !checkOut || !roomTypeLabel || !ratePerNight) {
+  if (!firstName || !lastName || !email || !checkIn || !checkOut || !roomTypeLabel || !ratePerNight) {
     return res.status(400).json({ error: 'Please fill in all required fields' });
   }
 
@@ -59,7 +59,6 @@ router.post('/', (req, res) => {
   const nights = Math.max(1, Math.round((outD - inD) / 86400000));
   const amount = nights * Number(ratePerNight);
 
-  const last = db.prepare('SELECT code FROM bookings ORDER BY id DESC LIMIT 1').get();
   const code = 'BK-' + Math.floor(1000 + Math.random() * 9000);
 
   let roomId = null;
@@ -68,11 +67,45 @@ router.post('/', (req, res) => {
     roomId = r ? r.id : null;
   }
 
+  // Reserved | Checked In | Checked Out, judged against today's date so
+  // it lines up with the room's real occupancy rather than a status
+  // that's set once and never revisited.
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const guestStatus = outD <= today ? 'Checked Out' : (inD <= today ? 'Checked In' : 'Reserved');
+  const guestName = `${firstName} ${lastName}`;
+
+  // One guest identity per email — new bookings for a returning guest
+  // update their existing record (room/status/last-visit) instead of
+  // creating a duplicate, so "Total Guests" reflects distinct people.
+  const existingGuest = db.prepare('SELECT id FROM guests WHERE email = ?').get(email);
+  let guestId;
+  if (existingGuest) {
+    db.prepare(
+      `UPDATE guests SET name = ?, phone = COALESCE(NULLIF(?, ''), phone), room_id = ?, status = ?, last_visit = date('now') WHERE id = ?`
+    ).run(guestName, phone || '', roomId, guestStatus, existingGuest.id);
+    guestId = existingGuest.id;
+  } else {
+    const last = db.prepare("SELECT code FROM guests ORDER BY id DESC LIMIT 1").get();
+    const nextNum = last ? Number(last.code.split('-')[1]) + 1 : 1001;
+    const guestCode = `G-${nextNum}`;
+    const info = db.prepare(
+      `INSERT INTO guests (code, name, email, phone, room_id, status, last_visit) VALUES (?, ?, ?, ?, ?, ?, date('now'))`
+    ).run(guestCode, guestName, email, phone || '', roomId, guestStatus);
+    guestId = info.lastInsertRowid;
+  }
+
   db.prepare(
-    `INSERT INTO bookings (code, guest_name, room_id, room_type, check_in, check_out, guests_count, amount, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed')`
-  ).run(code, `${firstName} ${lastName}`, roomId, roomTypeLabel, checkIn, checkOut, Number(guestsCount) || 1, amount);
-  notify(`New booking ${code} — ${firstName} ${lastName} (${roomTypeLabel}, ${nights} night${nights > 1 ? 's' : ''})`, 'booking');
+    `INSERT INTO bookings (code, guest_id, guest_name, room_id, room_type, check_in, check_out, guests_count, amount, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed')`
+  ).run(code, guestId, guestName, roomId, roomTypeLabel, checkIn, checkOut, Number(guestsCount) || 1, amount);
+  notify(`New booking ${code} — ${guestName} (${roomTypeLabel}, ${nights} night${nights > 1 ? 's' : ''})`, 'booking');
+
+  // A guest physically in the hotel means their room is occupied — keep
+  // the room list in sync with what the booking just implied, so the
+  // dashboard's "occupied rooms" and "checked in" numbers agree.
+  if (roomId && guestStatus === 'Checked In') {
+    db.prepare(`UPDATE rooms SET status = 'Occupied', updated_at = datetime('now') WHERE id = ?`).run(roomId);
+  }
 
   const row = db.prepare(BASE_SELECT + ' WHERE b.code = ?').get(code);
   res.status(201).json(serializeBooking(row));
